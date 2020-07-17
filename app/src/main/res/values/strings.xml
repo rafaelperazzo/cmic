@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CmirApp</string>
+    <string name="creditos">Desenvolvido por Rafael Perazzo/PROPLAN/UFCA</string>
+    <string name="token_valido">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
+</resources>
