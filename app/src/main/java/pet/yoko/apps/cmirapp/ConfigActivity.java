@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 import pet.yoko.apps.cmirapp.tasks.TaskGetURL;
 
 public class ConfigActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     EditText txtToken;
     ProgressBar progresso;
     TextView txtStatus;
@@ -24,8 +24,9 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         setTitle("Configuração de acesso");
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
         txtToken = (EditText)findViewById(R.id.txtConfigToken);
+        String token = Ferramenta.getPref("token","NULL");
+        txtToken.setText(token);
         progresso = (ProgressBar)findViewById(R.id.configProgresso);
         progresso.setVisibility(View.GONE);
         txtStatus = (TextView)findViewById(R.id.txtStatus);
@@ -33,10 +34,12 @@ public class ConfigActivity extends AppCompatActivity {
 
     public void salvarClick(View v) {
         if (tokenValido(txtToken.getText().toString())) {
-            txtStatus.setText("TOKEN VÁLIDO");
+            Ferramenta.setPref("token",txtToken.getText().toString());
         }
         else {
             txtStatus.setText("TOKEN INVÁLIDO");
+            txtStatus.setTextColor(Color.WHITE);
+            txtStatus.setBackgroundColor(Color.RED);
         }
     }
 

@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Items controlados");
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        verificarToken();
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        Ferramenta.setSharedPref(sharedPref);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verificarToken() {
-        String token = Ferramenta.getPref(sharedPref,"token","NULL");
+        String token = Ferramenta.getPref("token","NULL");
         if (token.equals("NULL")) {
             Intent intent = new Intent(this, ConfigActivity.class);
             startActivity(intent);
