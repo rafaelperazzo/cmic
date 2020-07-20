@@ -3,6 +3,7 @@ package pet.yoko.apps.cmirapp.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import org.json.JSONArray;
@@ -63,6 +64,7 @@ public class DownloadItems extends AsyncTask <Void,Void,Void> {
     protected void onPreExecute() {
         super.onPreExecute();
         progresso.setVisibility(View.VISIBLE);
+        progresso.getLayoutParams().height = LinearLayout.LayoutParams.MATCH_PARENT;
     }
 
     @Override
@@ -75,5 +77,6 @@ public class DownloadItems extends AsyncTask <Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         progresso.setVisibility(View.GONE);
+        progresso.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
     }
 }
