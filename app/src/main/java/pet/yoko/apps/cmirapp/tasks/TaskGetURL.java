@@ -2,13 +2,16 @@ package pet.yoko.apps.cmirapp.tasks;
 
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class TaskGetURL extends AsyncTask<Void, Void, String> {
+public class TaskGetURL extends AsyncTask<Void, Void, JSONArray> {
 
     private String url;
     OkHttpClient client = new OkHttpClient();
@@ -25,13 +28,19 @@ public class TaskGetURL extends AsyncTask<Void, Void, String> {
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
         } catch (IOException e) {
-            return ("0");
+            return ("[]");
         }
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected JSONArray doInBackground(Void... voids) {
         String retorno = this.run(url);
-        return retorno;
+        JSONArray arr = null;
+        try {
+            arr = new JSONArray(retorno);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return arr;
     }
 }

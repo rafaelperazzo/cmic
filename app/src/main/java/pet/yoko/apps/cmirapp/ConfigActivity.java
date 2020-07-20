@@ -11,6 +11,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.concurrent.ExecutionException;
 
 import pet.yoko.apps.cmirapp.tasks.TaskGetURL;
@@ -35,6 +39,7 @@ public class ConfigActivity extends AppCompatActivity {
     public void salvarClick(View v) {
         if (tokenValido(txtToken.getText().toString())) {
             Ferramenta.setPref("token",txtToken.getText().toString());
+            finish();
         }
         else {
             txtStatus.setText("TOKEN INVÁLIDO");
@@ -50,7 +55,7 @@ public class ConfigActivity extends AppCompatActivity {
     public boolean tokenValido(String token) {
         String URL = getResources().getString(R.string.token_valido) + token;
         TaskGetURL processo = new TaskGetURL(URL);
-        String retorno = "0";
+        JSONArray retorno = null;
         try {
             progresso.setVisibility(View.VISIBLE);
             retorno = processo.execute().get();
@@ -60,12 +65,20 @@ public class ConfigActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (Integer.parseInt(retorno)==1) {
+        if (retorno.length()>0) {
+            try {
+                Ferramenta.setPref("nome",retorno.getJSONObject(0).getString("nome"));
+                Ferramenta.setPref("ua",retorno.getJSONObject(0).getString("ua"));
+                Ferramenta.setPref("permissao",retorno.getJSONObject(0).getString("permissao"));
+                Ferramenta.setPref("username",retorno.getJSONObject(0).getString("username"));
+            }
+            catch (IndexOutOfBoundsException | JSONException e) {
+                e.printStackTrace();
+            }
             return(true);
         }
         else {
             return(false);
         }
     }
-
 }

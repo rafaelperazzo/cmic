@@ -2,5 +2,21 @@
     <string name="app_name">CmirApp</string>
     <string name="creditos">Desenvolvido por Rafael Perazzo/PROPLAN/UFCA</string>
     <string name="token_valido">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
+    <string name="get_items">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
     <string name="preference_file_key">pet.yoko.apps.PREFERENCE_FILE_KEY</string>
+    <string-array name="setor">
+        <item>CCAB</item>
+        <item>CCSA</item>
+        <item>CCT</item>
+        <item>FAMED</item>
+        <item>IFE</item>
+        <item>IISCA</item>
+    </string-array>
+    <string-array name="finalidade">
+        <item>PROJETO DE PESQUISA</item>
+        <item>AULA PRÁTICA</item>
+        <item>TRABALHO DE CONCLUSÃO DE CURSO</item>
+        <item>MONOGRAFIA, DISSERTAÇÃO, TESE</item>
+        <item>OUTRO (DETALHAR)</item>
+    </string-array>
 </resources>
