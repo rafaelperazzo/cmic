@@ -1,6 +1,13 @@
 package pet.yoko.apps.cmirapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class Ferramenta {
 
@@ -23,6 +30,15 @@ public class Ferramenta {
     public static String getPref(String config, String defaultValue) {
         String atualizacao = sharedPref.getString(config,defaultValue);
         return (atualizacao);
+    }
+
+    public static void prepararRecycleView(RecyclerView recyclerView, ArrayList items, RecyclerView.Adapter adapter, Context c) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(c);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(c,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
     }
 
 }

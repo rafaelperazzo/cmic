@@ -1,7 +1,11 @@
 package pet.yoko.apps.cmirapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -12,13 +16,16 @@ import android.widget.TextView;
 
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import pet.yoko.apps.cmirapp.db.DatabaseClient;
 import pet.yoko.apps.cmirapp.db.Item;
+import pet.yoko.apps.cmirapp.db.Movimentacao;
 import pet.yoko.apps.cmirapp.tasks.TaskCadastrarMovimentacao;
 import pet.yoko.apps.cmirapp.tasks.TaskCarregarItems;
+import pet.yoko.apps.cmirapp.tasks.TaskGetMovimentacoes;
 
 public class MovimentacaoActivity extends AppCompatActivity {
     SearchableSpinner cmbItem;
@@ -28,7 +35,10 @@ public class MovimentacaoActivity extends AppCompatActivity {
     EditText txtDetalhes;
     ProgressBar progresso;
     List<Item> items;
+    ArrayList<Movimentacao> movimentacoes;
+    AdapterMovimentacao adapter;
     TextView txtStatus;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +62,20 @@ public class MovimentacaoActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        recyclerView = (RecyclerView)findViewById(R.id.tabelaMovimentacoes);
+        movimentacoes = new ArrayList<>();
+        adapter = new AdapterMovimentacao(movimentacoes);
+        prepararRecycleView(recyclerView,adapter);
+        prepararTabela();
+    }
+
+    public void prepararRecycleView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
     }
 
     public void cadastrarClick(View v) {
@@ -84,6 +108,7 @@ public class MovimentacaoActivity extends AppCompatActivity {
                 txtStatus.setText("Movimentação cadastrada com sucesso");
                 txtStatus.setBackgroundColor(Color.GREEN);
                 txtStatus.setTextColor(Color.BLACK);
+                prepararTabela();
             }
             else {
                 txtStatus.setText(resposta);
@@ -101,5 +126,22 @@ public class MovimentacaoActivity extends AppCompatActivity {
         else {
             return (true);
         }
+    }
+
+    public void prepararTabela() {
+        TaskGetMovimentacoes tgm = new TaskGetMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso);
+        try {
+            movimentacoes = (ArrayList<Movimentacao>) tgm.execute().get();
+            adapter.setItems(movimentacoes);
+            adapter.notifyDataSetChanged();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recarregarDados(View v) {
+        prepararTabela();
     }
 }

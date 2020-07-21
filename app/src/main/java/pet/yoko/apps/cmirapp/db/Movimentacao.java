@@ -13,10 +13,10 @@ public class Movimentacao implements Serializable {
     private int id;
 
     @ColumnInfo(name = "item")
-    int item;
+    String item;
 
     @ColumnInfo(name = "quantidade")
-    int quantidade;
+    float quantidade;
 
     @ColumnInfo(name = "data")
     String data;
@@ -30,7 +30,7 @@ public class Movimentacao implements Serializable {
     @ColumnInfo(name = "username")
     String username;
 
-    public Movimentacao(int id, int item, int quantidade, String data, String ua, String finalidade, String username) {
+    public Movimentacao(int id, String item, float quantidade, String data, String ua, String finalidade, String username) {
         this.id = id;
         this.item = item;
         this.quantidade = quantidade;
@@ -48,19 +48,19 @@ public class Movimentacao implements Serializable {
         this.id = id;
     }
 
-    public int getItem() {
+    public String getItem() {
         return item;
     }
 
-    public void setItem(int item) {
+    public void setItem(String item) {
         this.item = item;
     }
 
-    public int getQuantidade() {
+    public float getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(float quantidade) {
         this.quantidade = quantidade;
     }
 

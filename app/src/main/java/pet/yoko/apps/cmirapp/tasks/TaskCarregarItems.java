@@ -19,6 +19,7 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
     AppDatabase db;
     SearchableSpinner spinner;
     Context context;
+    List<String> descricao = new ArrayList<>();
 
     public TaskCarregarItems(AppDatabase db, SearchableSpinner items, Context context) {
         this.db = db;
@@ -34,14 +35,17 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
     @Override
     protected List<Item> doInBackground(Void... voids) {
         List<Item> items = db.itemDao().getAll();
-        List<String> descricao = new ArrayList<String>();
         for (int i=0; i<items.size(); i++) {
             descricao.add(items.get(i).getDescricao());
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item,descricao);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
         return items;
     }
 
+    @Override
+    protected void onPostExecute(List<Item> items) {
+        super.onPostExecute(items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item,descricao);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
 }

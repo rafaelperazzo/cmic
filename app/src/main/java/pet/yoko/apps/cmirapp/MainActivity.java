@@ -16,6 +16,7 @@ import java.util.Calendar;
 
 import pet.yoko.apps.cmirapp.db.DatabaseClient;
 import pet.yoko.apps.cmirapp.tasks.DownloadItems;
+import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,19 +36,29 @@ public class MainActivity extends AppCompatActivity {
         txtUser = (TextView)findViewById(R.id.txtUser);
         progresso = (ProgressBar)findViewById(R.id.progresso);
         progresso.setVisibility(View.GONE);
-        if (Ferramenta.getPref("items","null").equals("null")) {
-            DownloadItems di = new DownloadItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext());
-            di.execute();
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-            Ferramenta.setPref("items",timeStamp);
-        }
+
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        verificarToken();
+
+        if (Ferramenta.getPref("token","NULL").equals("NULL")) {
+            verificarToken();
+        }
+        else {
+            if (Ferramenta.getPref("items","NULL").equals("NULL")) {
+                DownloadItems di = new DownloadItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext());
+                di.execute();
+                String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+                Ferramenta.setPref("items",timeStamp);
+            }
+
+            DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
+            dm.execute();
+        }
+
     }
 
     private void verificarToken() {
