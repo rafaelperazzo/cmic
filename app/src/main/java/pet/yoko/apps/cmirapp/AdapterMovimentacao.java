@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,7 +62,7 @@ public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentac
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterMovimentacao.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterMovimentacao.ViewHolder holder, final int position) {
         Movimentacao movimentacao = items.get(position);
         TextView item_id = holder.item_id;
         TextView item_descricao = holder.item_descricao;
@@ -74,6 +75,11 @@ public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentac
         item_quantidade.setText(String.valueOf(movimentacao.getQuantidade()));
         item_finalidade.setText(movimentacao.getFinalidade());
         item_data.setText(movimentacao.getData());
+        item_remover.setOnClickListener(view -> removerLinha(position));
+    }
+
+    public void removerLinha(int position) {
+        int id = items.get(position).getId();
 
     }
 

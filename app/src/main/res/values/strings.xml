@@ -4,6 +4,7 @@
     <string name="token_valido">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
     <string name="get_items">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
     <string name="get_movimentacoes">/movimentacoes/listar/</string>
+    <string name="deletar_movimentacao">/deletar/id/</string>
     <string name="url_base">https://sci02-ter-jne.ufca.edu.br/cgs/api/</string>
     <string name="preference_file_key">pet.yoko.apps.PREFERENCE_FILE_KEY</string>
     <string-array name="setor">

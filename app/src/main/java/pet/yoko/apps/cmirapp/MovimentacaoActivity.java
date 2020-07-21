@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import pet.yoko.apps.cmirapp.db.DatabaseClient;
 import pet.yoko.apps.cmirapp.db.Item;
 import pet.yoko.apps.cmirapp.db.Movimentacao;
+import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
 import pet.yoko.apps.cmirapp.tasks.TaskCadastrarMovimentacao;
 import pet.yoko.apps.cmirapp.tasks.TaskCarregarItems;
 import pet.yoko.apps.cmirapp.tasks.TaskGetMovimentacoes;
@@ -131,6 +132,8 @@ public class MovimentacaoActivity extends AppCompatActivity {
     public void prepararTabela() {
         TaskGetMovimentacoes tgm = new TaskGetMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso);
         try {
+            DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
+            dm.execute();
             movimentacoes = (ArrayList<Movimentacao>) tgm.execute().get();
             adapter.setItems(movimentacoes);
             adapter.notifyDataSetChanged();

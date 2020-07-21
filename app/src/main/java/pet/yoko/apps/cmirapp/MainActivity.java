@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         progresso = (ProgressBar)findViewById(R.id.progresso);
         progresso.setVisibility(View.GONE);
 
-
     }
 
     @Override

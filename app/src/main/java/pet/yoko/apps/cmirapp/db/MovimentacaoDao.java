@@ -9,7 +9,7 @@ import java.util.List;
 @Dao
 public interface MovimentacaoDao {
 
-    @Query("SELECT * FROM Movimentacao")
+    @Query("SELECT * FROM Movimentacao ORDER BY data,item DESC")
     List<Movimentacao> getAll();
 
     @Query("SELECT * FROM Movimentacao WHERE username=:username")

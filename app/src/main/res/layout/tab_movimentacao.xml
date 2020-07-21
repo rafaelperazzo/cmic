@@ -7,50 +7,55 @@
     <TextView
         android:id="@+id/txtTabId"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.2"
         android:gravity="center_vertical"
         android:text="ID"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/txtTabItem"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:gravity="center_vertical"
         android:text="ITEM"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/txtTabQuantidade"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.3"
         android:gravity="center_vertical"
         android:text="QTDE"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/txtTabFinalidade"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.4"
         android:gravity="center_vertical"
         android:text="FINA"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/txtTabData"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.3"
         android:gravity="center_vertical"
         android:text="DATA"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/imgTabRemover"
