@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import pet.yoko.apps.cmirapp.db.Movimentacao;
+
 public class Ferramenta {
 
     private static SharedPreferences sharedPref;
@@ -39,6 +41,22 @@ public class Ferramenta {
         recyclerView.setAdapter(adapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(c,DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecor);
+    }
+
+    public static void filtrarTabela(ArrayList<Movimentacao> listaMovimentacoes, AdapterMovimentacao adapter, String newText) {
+        ArrayList<Movimentacao> filtrada = new ArrayList<>();
+        if (!newText.isEmpty()) {
+            for (Movimentacao linha: listaMovimentacoes) {
+                if (linha.getItem().toLowerCase().contains(newText)) {
+                    filtrada.add(linha);
+                }
+            }
+            adapter.setItems(filtrada);
+        }
+        else {
+            adapter.setItems(listaMovimentacoes);
+        }
+        adapter.notifyDataSetChanged();
     }
 
 }

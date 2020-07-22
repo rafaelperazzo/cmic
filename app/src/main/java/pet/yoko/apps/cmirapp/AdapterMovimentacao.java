@@ -6,14 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import pet.yoko.apps.cmirapp.db.Movimentacao;
+import pet.yoko.apps.cmirapp.tasks.TaskDeletarMovimentacao;
 
 public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentacao.ViewHolder> {
 
@@ -38,6 +39,7 @@ public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentac
     }
 
     private List<Movimentacao> items;
+    private Context context;
 
     public List<Movimentacao> getItems() {
         return items;
@@ -47,8 +49,9 @@ public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentac
         this.items = items;
     }
 
-    public AdapterMovimentacao(List<Movimentacao> items) {
+    public AdapterMovimentacao(List<Movimentacao> items, Context context) {
         this.items = items;
+        this.context = context;
     }
 
     @NonNull
@@ -79,12 +82,32 @@ public class AdapterMovimentacao extends RecyclerView.Adapter <AdapterMovimentac
     }
 
     public void removerLinha(int position) {
-        int id = items.get(position).getId();
-
+        /*int id = items.get(position).getId();
+        TaskDeletarMovimentacao removerMovimentacao = new TaskDeletarMovimentacao(id);
+        removerMovimentacao.execute();
+        items.remove(position);
+        notifyDataSetChanged();*/
+        confirmacao(position);
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private void confirmacao(int position) {
+        new AlertDialog.Builder(this.context)
+                .setTitle("Confirmação")
+                .setMessage("Tem certeza ? A operação não poderá ser desfeita!")
+                //.setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(context.getDrawable(R.drawable.alert))
+                .setPositiveButton("SIM", (dialog, whichButton) -> {
+                    int id = items.get(position).getId();
+                    TaskDeletarMovimentacao removerMovimentacao = new TaskDeletarMovimentacao(id);
+                    removerMovimentacao.execute();
+                    items.remove(position);
+                    notifyDataSetChanged();
+                })
+                .setNegativeButton("CANCELAR", null).show();
     }
 }

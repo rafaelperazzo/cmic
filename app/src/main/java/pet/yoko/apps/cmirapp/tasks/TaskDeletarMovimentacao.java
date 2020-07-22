@@ -11,52 +11,34 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import pet.yoko.apps.cmirapp.Ferramenta;
-import pet.yoko.apps.cmirapp.R;
-import pet.yoko.apps.cmirapp.db.AppDatabase;
 
-public class TaskDeletarMovimentacao extends AsyncTask<Void,Void,String> {
+public class TaskDeletarMovimentacao extends AsyncTask<Void,Void,Void> {
 
-    AppDatabase db;
     int id;
-    ProgressBar progresso;
-    Context context;
     private OkHttpClient client = new OkHttpClient();
 
-    public TaskDeletarMovimentacao(AppDatabase db, int id, ProgressBar progresso, Context context) {
-        this.db = db;
+    public TaskDeletarMovimentacao(int id) {
         this.id = id;
-        this.progresso = progresso;
-        this.context = context;
     }
 
-    public String run(String url){
+    public void run(String url){
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            String resposta = response.body().string();
+            int a = 1;
         } catch (IOException e) {
-            return ("ERRO: IOException");
+            e.printStackTrace();
         }
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progresso.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        progresso.setVisibility(View.GONE);
-    }
-
-    @Override
-    protected String doInBackground(Void... voids) {
-        String URL = context.getResources().getString(R.string.url_base) + Ferramenta.getPref("token","null") + context.getResources().getString(R.string.deletar_movimentacao) + String.valueOf(this.id);
-        String resposta = run(URL);
-        return resposta;
+    protected Void doInBackground(Void... voids) {
+        //String URL = context.getResources().getString(R.string.url_base) + Ferramenta.getPref("token","null") + context.getResources().getString(R.string.deletar_movimentacao) + this.id;
+        String URL = "https://sci02-ter-jne.ufca.edu.br/cgs/api/" + Ferramenta.getPref("token","null") + "/deletar/id/" + this.id;
+        run(URL);
+        return null;
     }
 }

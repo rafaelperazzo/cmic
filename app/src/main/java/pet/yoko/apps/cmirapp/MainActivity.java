@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
             DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
             dm.execute();
+            this.imgUser.setImageResource(R.drawable.authentication);
+            this.txtUser.setText(Ferramenta.getPref("nome","NULL"));
         }
 
     }

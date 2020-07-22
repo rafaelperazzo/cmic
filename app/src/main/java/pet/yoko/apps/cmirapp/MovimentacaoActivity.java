@@ -10,7 +10,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,6 +42,8 @@ public class MovimentacaoActivity extends AppCompatActivity {
     AdapterMovimentacao adapter;
     TextView txtStatus;
     RecyclerView recyclerView;
+    LinearLayout cadastro;
+    SearchView search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +53,28 @@ public class MovimentacaoActivity extends AppCompatActivity {
         cmbItem.setTitle("Escolha o item");
         cmbItem.setPositiveButton("OK");
         cmbSetor = (Spinner)findViewById(R.id.cmbSetor);
+        prepararSetor();
         cmbFinalidade = (Spinner)findViewById(R.id.cmbFinalidade);
         txtQuantidade = (EditText) findViewById(R.id.txtQuantidade);
         txtDetalhes = (EditText) findViewById(R.id.txtDetalhes);
         progresso = (ProgressBar)findViewById(R.id.progressoMovimentacao);
         progresso.setVisibility(View.GONE);
         txtStatus = (TextView)findViewById(R.id.txtStatus);
+        cadastro = (LinearLayout)findViewById(R.id.layoutCadastro);
+        search = (SearchView)findViewById(R.id.searchMovimentacao);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Ferramenta.filtrarTabela(movimentacoes,adapter,query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Ferramenta.filtrarTabela(movimentacoes,adapter,newText);
+                return false;
+            }
+        });
         TaskCarregarItems tci = new TaskCarregarItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),cmbItem,getApplicationContext());
         try {
             items = tci.execute().get();
@@ -65,9 +85,35 @@ public class MovimentacaoActivity extends AppCompatActivity {
         }
         recyclerView = (RecyclerView)findViewById(R.id.tabelaMovimentacoes);
         movimentacoes = new ArrayList<>();
-        adapter = new AdapterMovimentacao(movimentacoes);
+        adapter = new AdapterMovimentacao(movimentacoes,this);
         prepararRecycleView(recyclerView,adapter);
         prepararTabela();
+    }
+
+    public void tabelaClick(View v) {
+        if (cadastro.getVisibility()==View.GONE) {
+            cadastro.setVisibility(View.VISIBLE);
+        }
+        else {
+            cadastro.setVisibility(View.GONE);
+        }
+    }
+
+    private void prepararSetor() {
+        int index = 0;
+        for (int i=0; i<cmbSetor.getAdapter().getCount(); i++) {
+            if (cmbSetor.getAdapter().getItem(i).equals(Ferramenta.getPref("ua","null"))) {
+                index = i;
+                break;
+            }
+        }
+        cmbSetor.setSelection(index);
+        if (Ferramenta.getPref("permissao","-1").equals("1")) {
+            cmbSetor.setEnabled(false);
+        }
+        else {
+            cmbSetor.setEnabled(true);
+        }
     }
 
     public void prepararRecycleView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
