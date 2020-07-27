@@ -18,11 +18,13 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 import pet.yoko.apps.cmirapp.tasks.TaskGetURL;
+import pet.yoko.apps.cmirapp.tasks.TaskReceberToken;
 
 public class ConfigActivity extends AppCompatActivity {
     EditText txtToken;
     ProgressBar progresso;
     TextView txtStatus;
+    EditText txtEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class ConfigActivity extends AppCompatActivity {
         progresso = (ProgressBar)findViewById(R.id.configProgresso);
         progresso.setVisibility(View.GONE);
         txtStatus = (TextView)findViewById(R.id.txtStatus);
+        txtEmail = (EditText) findViewById(R.id.txtEmail);
     }
 
     public void salvarClick(View v) {
@@ -81,4 +84,16 @@ public class ConfigActivity extends AppCompatActivity {
             return(false);
         }
     }
+
+    public void receberTokenClick(View v) {
+        if (txtEmail.getText().toString().length()>0) {
+            TaskReceberToken recToken = new TaskReceberToken(this,txtEmail.getText().toString(),progresso);
+            recToken.execute();
+        }
+        else {
+            txtEmail.setError("Precisa ser preenchido!");
+        }
+
+    }
+
 }
