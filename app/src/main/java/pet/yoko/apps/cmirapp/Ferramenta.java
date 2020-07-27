@@ -7,6 +7,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 
 import pet.yoko.apps.cmirapp.db.Movimentacao;
@@ -57,6 +61,19 @@ public class Ferramenta {
             adapter.setItems(listaMovimentacoes);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    public static int getAppPlayStoreVersion(String html) {
+        Document doc = Jsoup.parse(html);
+        int versaoPublicada = 0;
+        Elements versao = doc.getElementsByClass("htlgb");
+        try {
+            versaoPublicada = Integer.parseInt(versao.get(7).text());
+        }
+        catch (NumberFormatException e) {
+            versaoPublicada = 0;
+        }
+        return (versaoPublicada);
     }
 
 }

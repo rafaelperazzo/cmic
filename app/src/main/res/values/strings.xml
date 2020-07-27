@@ -22,4 +22,5 @@
         <item>MONOGRAFIA, DISSERTAÇÃO, TESE</item>
         <item>OUTRO (DETALHAR)</item>
     </string-array>
+    <string name="play">https://play.google.com/store/apps/details?id=pet.yoko.apps.cmirapp</string>
 </resources>

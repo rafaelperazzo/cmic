@@ -1,11 +1,15 @@
 package pet.yoko.apps.cmirapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -17,6 +21,7 @@ import java.util.Calendar;
 import pet.yoko.apps.cmirapp.db.DatabaseClient;
 import pet.yoko.apps.cmirapp.tasks.DownloadItems;
 import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
+import pet.yoko.apps.cmirapp.tasks.TaskCheckUpdate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgUser;
     TextView txtUser;
     ProgressBar progresso;
+    TextView txtVersao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,22 @@ public class MainActivity extends AppCompatActivity {
         txtUser = (TextView)findViewById(R.id.txtUser);
         progresso = (ProgressBar)findViewById(R.id.progresso);
         progresso.setVisibility(View.GONE);
+        txtVersao = (TextView)findViewById(R.id.txtVersao);
+        txtVersao.setText(String.valueOf(getVersionCode()));
+        TaskCheckUpdate update = new TaskCheckUpdate(this);
+        update.execute();
+    }
 
+    public int getVersionCode() {
+        int versionCode = 0;
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return (versionCode);
     }
 
     @Override
@@ -59,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             this.imgUser.setImageResource(R.drawable.authentication);
             this.txtUser.setText(Ferramenta.getPref("nome","NULL"));
         }
-
     }
 
     private void verificarToken() {
@@ -88,4 +108,5 @@ public class MainActivity extends AppCompatActivity {
     public void relatorioClick(View v) {
 
     }
+
 }
