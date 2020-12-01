@@ -35,6 +35,7 @@ public class MovimentacaoActivity extends AppCompatActivity {
     Spinner cmbSetor;
     Spinner cmbFinalidade;
     EditText txtQuantidade;
+    Spinner cmbMedida;
     EditText txtDetalhes;
     ProgressBar progresso;
     List<Item> items;
@@ -56,6 +57,7 @@ public class MovimentacaoActivity extends AppCompatActivity {
         prepararSetor();
         cmbFinalidade = (Spinner)findViewById(R.id.cmbFinalidade);
         txtQuantidade = (EditText) findViewById(R.id.txtQuantidade);
+        cmbMedida = (Spinner)findViewById(R.id.txtMedida);
         txtDetalhes = (EditText) findViewById(R.id.txtDetalhes);
         progresso = (ProgressBar)findViewById(R.id.progressoMovimentacao);
         progresso.setVisibility(View.GONE);
@@ -140,7 +142,8 @@ public class MovimentacaoActivity extends AppCompatActivity {
             String setor = cmbSetor.getSelectedItem().toString();
             String finalidade = cmbFinalidade.getSelectedItem().toString();
             String detalhes = txtDetalhes.getText().toString();
-            TaskCadastrarMovimentacao submit = new TaskCadastrarMovimentacao(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext(),item_id,quantidade,setor,finalidade,detalhes);
+            String medida = cmbMedida.getSelectedItem().toString();
+            TaskCadastrarMovimentacao submit = new TaskCadastrarMovimentacao(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext(),item_id,quantidade,setor,finalidade,detalhes,medida);
             String resposta = "";
             try {
                 resposta = submit.execute().get();

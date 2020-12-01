@@ -22,6 +22,10 @@
         <item>MONOGRAFIA, DISSERTAÇÃO, TESE</item>
         <item>OUTRO (DETALHAR)</item>
     </string-array>
+    <string-array name="medidas">
+        <item>KG</item>
+        <item>L</item>
+    </string-array>
     <string name="play">https://play.google.com/store/apps/details?id=pet.yoko.apps.cmirapp</string>
     <string name="email">\@ufca.edu.br</string>
 </resources>

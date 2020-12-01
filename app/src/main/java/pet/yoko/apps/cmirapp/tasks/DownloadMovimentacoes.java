@@ -48,7 +48,7 @@ public class DownloadMovimentacoes extends AsyncTask <Void,Void,Void> {
             db.movimentacaoDao().delete_all();
             for (int i=0; i<arr.length();i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                Movimentacao movimentacao = new Movimentacao(obj.getInt("id"),obj.getString("descricao_item"),(float)obj.getDouble("quantidade"),obj.getString("data"),obj.getString("unidade"),obj.getString("finalidade"),obj.getString("username"));
+                Movimentacao movimentacao = new Movimentacao(obj.getInt("id"),obj.getString("descricao_item"),(float)obj.getDouble("quantidade"),obj.getString("data"),obj.getString("unidade"),obj.getString("finalidade"),obj.getString("username"),obj.getString("descricao_medida"));
                 db.movimentacaoDao().insert(movimentacao);
             }
         } catch (JSONException e) {

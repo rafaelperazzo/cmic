@@ -27,17 +27,19 @@ public class TaskCadastrarMovimentacao extends AsyncTask<Void,Void,String> {
     Context context;
     int item;
     float quantidade;
+    String medida;
     String setor;
     String finalidade;
     String detalhes;
     OkHttpClient client = new OkHttpClient();
 
-    public TaskCadastrarMovimentacao(AppDatabase db, ProgressBar progresso, Context context, int item, float quantidade, String setor, String finalidade, String detalhes) {
+    public TaskCadastrarMovimentacao(AppDatabase db, ProgressBar progresso, Context context, int item, float quantidade, String setor, String finalidade, String detalhes,String medida) {
         this.db = db;
         this.progresso = progresso;
         this.context = context;
         this.item = item;
         this.quantidade = quantidade;
+        this.medida = medida;
         this.setor = setor;
         this.finalidade = finalidade;
         this.detalhes = detalhes;
@@ -50,6 +52,7 @@ public class TaskCadastrarMovimentacao extends AsyncTask<Void,Void,String> {
                 .add("finalidade", this.finalidade)
                 .add("descricao", this.detalhes)
                 .add("ua", this.setor)
+                .add("medida", this.medida)
                 .add("token", Ferramenta.getPref("token","null"))
                 .build();
         Request request = new Request.Builder()
