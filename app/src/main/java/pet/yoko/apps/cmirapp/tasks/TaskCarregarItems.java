@@ -20,14 +20,13 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
     SearchableSpinner spinner;
     Context context;
     List<String> descricao = new ArrayList<>();
-    ArrayList<Item> items;
-    public TaskCarregarItemsResponse delegate = null;
+    TaskCarregarItemsResponse delegate;
 
-    public TaskCarregarItems(AppDatabase db, SearchableSpinner spinner, Context context,ArrayList<Item> items) {
+    public TaskCarregarItems(AppDatabase db, SearchableSpinner spinner, Context context, TaskCarregarItemsResponse delegate) {
         this.db = db;
         this.spinner = spinner;
         this.context = context;
-        this.items = items;
+        this.delegate = delegate;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
         for (int i=0; i<items.size(); i++) {
             descricao.add(items.get(i).getDescricao());
         }
-        this.items = new ArrayList<>(items);
+
         return items;
     }
 

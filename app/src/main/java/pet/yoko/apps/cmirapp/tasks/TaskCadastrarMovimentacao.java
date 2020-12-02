@@ -32,8 +32,9 @@ public class TaskCadastrarMovimentacao extends AsyncTask<Void,Void,String> {
     String finalidade;
     String detalhes;
     OkHttpClient client = new OkHttpClient();
+    TaskCadastrarMovimentacaoResponse delegate;
 
-    public TaskCadastrarMovimentacao(AppDatabase db, ProgressBar progresso, Context context, int item, float quantidade, String setor, String finalidade, String detalhes,String medida) {
+    public TaskCadastrarMovimentacao(AppDatabase db, ProgressBar progresso, Context context, int item, float quantidade, String setor, String finalidade, String detalhes,String medida,TaskCadastrarMovimentacaoResponse delegate) {
         this.db = db;
         this.progresso = progresso;
         this.context = context;
@@ -43,6 +44,7 @@ public class TaskCadastrarMovimentacao extends AsyncTask<Void,Void,String> {
         this.setor = setor;
         this.finalidade = finalidade;
         this.detalhes = detalhes;
+        this.delegate = delegate;
     }
 
     private String run() {
@@ -90,5 +92,6 @@ public class TaskCadastrarMovimentacao extends AsyncTask<Void,Void,String> {
         super.onPostExecute(s);
         progresso.setVisibility(View.GONE);
         progresso.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        this.delegate.cadastrarMovimentacaoFinish(s);
     }
 }

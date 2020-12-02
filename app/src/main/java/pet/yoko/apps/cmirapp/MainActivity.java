@@ -9,21 +9,24 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import pet.yoko.apps.cmirapp.db.DatabaseClient;
+import pet.yoko.apps.cmirapp.db.Item;
 import pet.yoko.apps.cmirapp.tasks.DownloadItems;
 import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
+import pet.yoko.apps.cmirapp.tasks.TaskCarregarItemsResponse;
 import pet.yoko.apps.cmirapp.tasks.TaskCheckUpdate;
+import pet.yoko.apps.cmirapp.tasks.TaskGetNumItems;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskCarregarItemsResponse {
 
     SharedPreferences sharedPref;
     ImageView imgUser;
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         txtVersao.setText(String.valueOf(getVersionCode()));
         TaskCheckUpdate update = new TaskCheckUpdate(this);
         update.execute();
+        TaskGetNumItems tgi = new TaskGetNumItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),this);
+        tgi.execute();
     }
 
     public int getVersionCode() {
@@ -109,4 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void processFinish(ArrayList<Item> items) {
+        if (items.size()==0) {
+            DownloadItems di = new DownloadItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext());
+            di.execute();
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+            Ferramenta.setPref("items",timeStamp);
+        }
+    }
 }

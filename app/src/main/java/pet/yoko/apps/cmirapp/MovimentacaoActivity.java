@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -27,11 +26,12 @@ import pet.yoko.apps.cmirapp.db.Item;
 import pet.yoko.apps.cmirapp.db.Movimentacao;
 import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
 import pet.yoko.apps.cmirapp.tasks.TaskCadastrarMovimentacao;
+import pet.yoko.apps.cmirapp.tasks.TaskCadastrarMovimentacaoResponse;
 import pet.yoko.apps.cmirapp.tasks.TaskCarregarItems;
 import pet.yoko.apps.cmirapp.tasks.TaskCarregarItemsResponse;
 import pet.yoko.apps.cmirapp.tasks.TaskGetMovimentacoes;
 
-public class MovimentacaoActivity extends AppCompatActivity implements TaskCarregarItemsResponse {
+public class MovimentacaoActivity extends AppCompatActivity implements TaskCarregarItemsResponse, TaskCadastrarMovimentacaoResponse {
     SearchableSpinner cmbItem;
     Spinner cmbSetor;
     Spinner cmbFinalidade;
@@ -79,15 +79,7 @@ public class MovimentacaoActivity extends AppCompatActivity implements TaskCarre
             }
         });
 
-        TaskCarregarItems tci = new TaskCarregarItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),cmbItem,getApplicationContext(),items);
-        tci.delegate = this;
-        /*try {
-            items = (ArrayList<Item>) tci.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+        TaskCarregarItems tci = new TaskCarregarItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),cmbItem,getApplicationContext(),this);
         tci.execute();
         recyclerView = (RecyclerView)findViewById(R.id.tabelaMovimentacoes);
         movimentacoes = new ArrayList<>();
@@ -147,28 +139,10 @@ public class MovimentacaoActivity extends AppCompatActivity implements TaskCarre
             String finalidade = cmbFinalidade.getSelectedItem().toString();
             String detalhes = txtDetalhes.getText().toString();
             String medida = cmbMedida.getSelectedItem().toString();
-            TaskCadastrarMovimentacao submit = new TaskCadastrarMovimentacao(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext(),item_id,quantidade,setor,finalidade,detalhes,medida);
+            TaskCadastrarMovimentacao submit = new TaskCadastrarMovimentacao(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,getApplicationContext(),item_id,quantidade,setor,finalidade,detalhes,medida,this);
             String resposta = "";
-            try {
-                resposta = submit.execute().get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-                resposta = "ExecutionException";
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                resposta = "InterruptedException";
-            }
-            if (resposta.equals("200")) {
-                txtStatus.setText("Movimentação cadastrada com sucesso");
-                txtStatus.setBackgroundColor(Color.GREEN);
-                txtStatus.setTextColor(Color.BLACK);
-                prepararTabela();
-            }
-            else {
-                txtStatus.setText(resposta);
-                txtStatus.setBackgroundColor(Color.RED);
-                txtStatus.setTextColor(Color.WHITE);
-            }
+            submit.execute();
+
         }
     }
 
@@ -184,17 +158,6 @@ public class MovimentacaoActivity extends AppCompatActivity implements TaskCarre
 
     public void prepararTabela() {
         TaskGetMovimentacoes tgm = new TaskGetMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,adapter,movimentacoes);
-        /*try {
-            DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
-            dm.execute();
-            movimentacoes = (ArrayList<Movimentacao>) tgm.execute().get();
-            adapter.setItems(movimentacoes);
-            adapter.notifyDataSetChanged();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
         dm.execute();
         tgm.execute();
@@ -208,5 +171,20 @@ public class MovimentacaoActivity extends AppCompatActivity implements TaskCarre
     public void processFinish(ArrayList<Item> items) {
         this.items = items;
         //https://stackoverflow.com/questions/12575068/how-to-get-the-result-of-onpostexecute-to-main-activity-because-asynctask-is-a
+    }
+
+    @Override
+    public void cadastrarMovimentacaoFinish(String response) {
+        if (response.equals("200")) {
+            txtStatus.setText("Movimentação cadastrada com sucesso");
+            txtStatus.setBackgroundColor(Color.GREEN);
+            txtStatus.setTextColor(Color.BLACK);
+            prepararTabela();
+        }
+        else {
+            txtStatus.setText(response);
+            txtStatus.setBackgroundColor(Color.RED);
+            txtStatus.setTextColor(Color.WHITE);
+        }
     }
 }
