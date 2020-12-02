@@ -20,11 +20,14 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
     SearchableSpinner spinner;
     Context context;
     List<String> descricao = new ArrayList<>();
+    ArrayList<Item> items;
+    public TaskCarregarItemsResponse delegate = null;
 
-    public TaskCarregarItems(AppDatabase db, SearchableSpinner items, Context context) {
+    public TaskCarregarItems(AppDatabase db, SearchableSpinner spinner, Context context,ArrayList<Item> items) {
         this.db = db;
-        this.spinner = items;
+        this.spinner = spinner;
         this.context = context;
+        this.items = items;
     }
 
     @Override
@@ -38,6 +41,7 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
         for (int i=0; i<items.size(); i++) {
             descricao.add(items.get(i).getDescricao());
         }
+        this.items = new ArrayList<>(items);
         return items;
     }
 
@@ -47,5 +51,6 @@ public class TaskCarregarItems extends AsyncTask <Void,Void,List<Item>> {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item,descricao);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        delegate.processFinish((ArrayList<Item>) items);
     }
 }

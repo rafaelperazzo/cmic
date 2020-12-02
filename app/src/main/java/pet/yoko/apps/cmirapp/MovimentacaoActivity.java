@@ -28,9 +28,10 @@ import pet.yoko.apps.cmirapp.db.Movimentacao;
 import pet.yoko.apps.cmirapp.tasks.DownloadMovimentacoes;
 import pet.yoko.apps.cmirapp.tasks.TaskCadastrarMovimentacao;
 import pet.yoko.apps.cmirapp.tasks.TaskCarregarItems;
+import pet.yoko.apps.cmirapp.tasks.TaskCarregarItemsResponse;
 import pet.yoko.apps.cmirapp.tasks.TaskGetMovimentacoes;
 
-public class MovimentacaoActivity extends AppCompatActivity {
+public class MovimentacaoActivity extends AppCompatActivity implements TaskCarregarItemsResponse {
     SearchableSpinner cmbItem;
     Spinner cmbSetor;
     Spinner cmbFinalidade;
@@ -38,7 +39,7 @@ public class MovimentacaoActivity extends AppCompatActivity {
     Spinner cmbMedida;
     EditText txtDetalhes;
     ProgressBar progresso;
-    List<Item> items;
+    ArrayList<Item> items;
     ArrayList<Movimentacao> movimentacoes;
     AdapterMovimentacao adapter;
     TextView txtStatus;
@@ -77,14 +78,17 @@ public class MovimentacaoActivity extends AppCompatActivity {
                 return false;
             }
         });
-        TaskCarregarItems tci = new TaskCarregarItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),cmbItem,getApplicationContext());
-        try {
-            items = tci.execute().get();
+
+        TaskCarregarItems tci = new TaskCarregarItems(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),cmbItem,getApplicationContext(),items);
+        tci.delegate = this;
+        /*try {
+            items = (ArrayList<Item>) tci.execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+        tci.execute();
         recyclerView = (RecyclerView)findViewById(R.id.tabelaMovimentacoes);
         movimentacoes = new ArrayList<>();
         adapter = new AdapterMovimentacao(movimentacoes,this);
@@ -179,8 +183,8 @@ public class MovimentacaoActivity extends AppCompatActivity {
     }
 
     public void prepararTabela() {
-        TaskGetMovimentacoes tgm = new TaskGetMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso);
-        try {
+        TaskGetMovimentacoes tgm = new TaskGetMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),progresso,adapter,movimentacoes);
+        /*try {
             DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
             dm.execute();
             movimentacoes = (ArrayList<Movimentacao>) tgm.execute().get();
@@ -190,10 +194,19 @@ public class MovimentacaoActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+        DownloadMovimentacoes dm = new DownloadMovimentacoes(DatabaseClient.getInstance(getApplicationContext()).getAppDatabase(),getApplicationContext());
+        dm.execute();
+        tgm.execute();
     }
 
     public void recarregarDados(View v) {
         prepararTabela();
+    }
+
+    @Override
+    public void processFinish(ArrayList<Item> items) {
+        this.items = items;
+        //https://stackoverflow.com/questions/12575068/how-to-get-the-result-of-onpostexecute-to-main-activity-because-asynctask-is-a
     }
 }
